@@ -1,0 +1,129 @@
+<div class="flex min-h-screen flex-col bg-canvas">
+  <header class="border-b border-line bg-surface">
+    <div class="mx-auto flex h-17 max-w-6xl items-center px-6">
+      <div class="flex items-center gap-3">
+        <div
+          class="flex size-9 items-center justify-center rounded-lg bg-bpost text-white"
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="4" rx="1" />
+            <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8" />
+            <path d="M10 12h4" />
+          </svg>
+        </div>
+        <div class="leading-tight">
+          <p class="text-sm font-semibold">bpost assistant</p>
+          <p class="text-[10px] tracking-widest text-muted uppercase">Daily operations workspace</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
+    <section aria-labelledby="dashboard-heading">
+      <p class="text-xs font-semibold tracking-widest text-bpost uppercase">
+        {{ greeting }}, operator
+      </p>
+      <h1 id="dashboard-heading" class="mt-2 text-3xl font-bold tracking-tight">
+        {{ today | date: 'EEEE, d MMMM y' }}
+      </h1>
+      <p class="mt-2 text-sm text-muted">
+        Keep your essential checks close and your shift notes in one place.
+      </p>
+    </section>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+      <section
+        aria-labelledby="checklist-heading"
+        class="min-h-130 rounded-2xl border border-line bg-surface"
+      >
+        <div class="flex items-center gap-3 border-b border-line px-5 py-4">
+          <div class="flex size-8 items-center justify-center rounded-lg bg-bpost-soft text-bpost" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="4" width="14" height="17" rx="2" />
+              <path d="m9 13 2 2 4-4" />
+            </svg>
+          </div>
+          <div class="leading-tight">
+            <h2 id="checklist-heading" class="text-sm font-semibold">Today's checklist</h2>
+            <p class="text-xs text-muted">Daily checks and routines</p>
+          </div>
+          <button
+            type="button"
+            class="ml-auto flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs font-semibold text-muted hover:bg-canvas hover:text-ink"
+            (click)="resetTasks()"
+          >
+            <svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 3-6.7" />
+              <path d="M3 4v5h5" />
+            </svg>
+            Reset day
+          </button>
+        </div>
+
+        <div class="px-5 py-5">
+          <h3 class="flex items-center gap-2 text-[11px] font-semibold tracking-widest text-muted uppercase">
+            Today's tasks
+            <span class="rounded bg-canvas px-1.5 py-0.5 text-[10px]">{{ tasks().length }}</span>
+          </h3>
+
+          <ul class="mt-4 space-y-1">
+            @for (task of tasks(); track $index) {
+              <li>
+                <label class="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2.5 text-sm hover:bg-canvas">
+                  <input
+                    type="checkbox"
+                    class="size-4 accent-bpost"
+                    [checked]="task.completed"
+                    (change)="toggleTask($index)"
+                  />
+                  <span [class.line-through]="task.completed" [class.text-muted]="task.completed">
+                    {{ task.label }}
+                  </span>
+                </label>
+              </li>
+            }
+          </ul>
+
+          <form class="mt-6 flex gap-2 border-t border-line pt-5" (submit)="addOptionalTask($event)">
+            <input
+              type="text"
+              name="optionalTask"
+              aria-label="Optional task"
+              placeholder="Add an optional task..."
+              class="min-w-0 flex-1 rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-bpost"
+              [value]="newTaskLabel()"
+              (input)="newTaskLabel.set($any($event.target).value)"
+            />
+            <button
+              type="submit"
+              class="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
+              [disabled]="!canAddTask()"
+            >
+              Add task
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section
+        aria-labelledby="notebook-heading"
+        class="min-h-130 rounded-2xl border border-line bg-surface"
+      >
+        <div class="flex items-center gap-3 border-b border-line px-5 py-4">
+          <div class="flex size-8 items-center justify-center rounded-lg bg-canvas text-muted" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+              <path d="M14 3v5h5" />
+            </svg>
+          </div>
+          <div class="leading-tight">
+            <h2 id="notebook-heading" class="text-sm font-semibold">Shift notebook</h2>
+            <p class="text-xs text-muted">Capture notes, handovers, and reminders</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>

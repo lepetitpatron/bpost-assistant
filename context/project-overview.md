@@ -75,7 +75,7 @@ Daily postal, logistical, and automation operational workflows at Bpost involve 
 
 ##### B. Task Breakdown
 * **Mandatory vs. Optional Flags**: Distinct visual tags distinguishing critical operational tasks from optional daily routines.
-* **Data Fields**: Each task consists of three exact fields: `label` (string), `mandatory` (boolean), and `completed` ("y" | "n").
+* **Data Fields**: Each task consists of three exact fields: `label` (string), `mandatory` (boolean), and `completed` (boolean).
 * **Storage Engine**: Persists data directly to `tasks.json`.
 
 ##### C. Developer Knowledge Hub & Custom Types
@@ -92,17 +92,17 @@ Daily postal, logistical, and automation operational workflows at Bpost involve 
   {
     "label": "Verify morning sorting dispatch",
     "mandatory": true,
-    "completed": "y"
+    "completed": true
   },
   {
     "label": "Check shift handover log",
     "mandatory": true,
-    "completed": "n"
+    "completed": false
   },
   {
     "label": "Clean and re-stock label printer",
     "mandatory": false,
-    "completed": "n"
+    "completed": false
   }
 ]
 ```
@@ -112,7 +112,7 @@ Daily postal, logistical, and automation operational workflows at Bpost involve 
 export interface Task {
   label: string;
   mandatory: boolean;
-  completed: 'y' | 'n';
+  completed: boolean;
 }
 
 export type ResourceType = 'snippet' | 'prompt' | 'command' | 'note' | 'link' | 'file' | 'image' | string;
